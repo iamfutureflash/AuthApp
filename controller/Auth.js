@@ -74,17 +74,27 @@ exports.login = async (req, res) => {
                     role: user.role,
                 }
                 const JWT_SECRET = process.env.JWT_SECRET || 'puneet';
-                let token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+                let token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24hr" });
 
 
                 user.password = undefined;
 
-                const options = {
-                    expires: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)),
-                    httpOnly: true,
-                }
+                // const options = {
+                //     expires: new Date(Date.now() + 30000),
+                //     httpOnly: true,
+                // }
 
-                return res.cookie("token", token, options).status(200).json({
+                // return res.cookie("token", token, options).status(200).json({
+                //     success: true,
+                //     token,
+                //     user: {
+                //         ...user?._doc,
+                //         token,
+                //     },
+                //     message: 'user logged in successfully',
+                // });
+
+                return res.status(200).json({
                     success: true,
                     token,
                     user: {
@@ -93,8 +103,9 @@ exports.login = async (req, res) => {
                     },
                     message: 'user logged in successfully',
                 });
+
             } else {
-                return res.status(401).json({
+                return res.status(403).json({
                     success: false,
                     message: 'password is incorrect',
                 });
